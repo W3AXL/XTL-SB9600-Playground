@@ -1,0 +1,33 @@
+----------------------
+O5 Button Opcodes
+----------------------
+0x54    Backlight Button
+0x81    Home Button
+
+0x02    Volume Knob (see below for usage)
+
+0x04    Channel Knob (see below for usage)
+
+0x80    D-Pad Left
+0x82    D-Pad Right
+0x87    D-Pad Up
+0x88    D-Pad Down
+
+0x83    Softkey 1 (far left)
+0x89    Softkey 2
+0x84    Softkey 3
+0x8A    Softkey 4
+0x85    Softkey 5 (far right)
+
+0x94    Emergency Button
+
+----------------------
+Button Opcode Strings
+----------------------
+0x05 [Opcode] 0x01 0x57 [Checksum]  <-- Button Pressed Command
+0x05 [Opcode] 0x00 0x57 [Checksum]  <-- Button Release Command
+
+0x05 0x02 [Pot Val] 0x57 [Checksum] <-- Volume Knob Command
+
+0x05 0x04 [Clicks] 0x57 0xF5        <-- Channel Knob CW (clicks = 0x00 + number of clicks)
+0x05 0x04 [Clicks] 0x57 0xCC        <-- Channel Knob CCW (clicks = 0x00 - number of clicks)
