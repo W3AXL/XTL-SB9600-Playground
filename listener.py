@@ -1,4 +1,8 @@
-#!/bin/env python3
+#
+#   This script listens for any SB9600/SBEP messages, and tries to decode them
+#    
+#   the xtl.processMsg() function is where the main handling of messages is done
+#
 
 import sb9600
 import xtl5000

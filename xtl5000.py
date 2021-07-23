@@ -1,21 +1,8 @@
-#!/bin/env python3
-# GM1200 Controller class
-# Copyright (C) 2014 Paul Banks (http://paulbanks.org)
+# XTL Controller class
+# 
+# Original work copyright (C) 2014 Paul Banks (http://paulbanks.org)
 #
-# This file is part of GM1200Controller
-#
-# GM1200Controller is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# GM1200Controller is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GM1200Controller.  If not, see <http://www.gnu.org/licenses/>.
+# Modified for use with XTL series SB9600/SBEP commands by W3AXL
 #
 
 from time import sleep

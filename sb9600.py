@@ -1,23 +1,10 @@
-#!/bin/env python3
 # SB9600 - Motorola SB9600/SBEP protocol - common routines
-# Copyright (C) 2014 Paul Banks (http://paulbanks.org)
 #
-# This file is part of GM1200Controller
+# original work copyright (C) 2014 Paul Banks (http://paulbanks.org)
+#
+# Updated and modified by W3AXL
 #
 # NOTE: This protocol may be patented by Motorola. Use at your own risk.
-#
-# GM1200Controller is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# GM1200Controller is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with GM1200Controller.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 import serial

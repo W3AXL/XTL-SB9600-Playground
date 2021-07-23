@@ -1,4 +1,8 @@
-#!/bin/env python3
+#
+#   This script emulates a press of the backlight button on the O5 control head
+#
+#   Good for checking that you're able to send basic SB9600 commands to the radio
+#
 
 import sb9600
 import xtl5000
