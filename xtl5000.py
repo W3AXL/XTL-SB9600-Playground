@@ -49,6 +49,8 @@ class XTL:
 
     # O5 Button definitions
     button_map_o5 = {
+        'ptt': 0x01,
+        'hub': 0x06,
         'knob_vol': 0x02,
         'knob_chan': 0x04,
         'btn_light': 0x54,
@@ -70,6 +72,8 @@ class XTL:
         'monitor': 0x01,
         'scan': 0x04,
         'direct': 0x07,
+        'led_amber': 0x0f,
+        'led_red': 0x10,
         'low_power': 0x56
     }
 
@@ -114,7 +118,7 @@ class XTL:
                 subdev = msg[6]
                 subdevName = self.getDisplaySubDev(subdev)
                 # print data payload
-                print("RECVD<: Set {} to {}".format(subdevName,data.decode('ascii')))
+                self.printMsg("SBEP Disp", "Set {} to '{}'".format(subdevName,data.decode('ascii')))
                 # return
                 return
 
@@ -128,7 +132,7 @@ class XTL:
                 else:
                     state = "off"
                 # print
-                print("RECVD<: {} icon {}".format(icon, state))
+                self.printMsg("SBEP Icon","{} ({}) icon {}".format(icon, hex(msg[3]), state))
                 return
 
             # Fallback to printing raw message
@@ -157,7 +161,29 @@ class XTL:
                 # Get module name
                 module = self.getSbepModule(param2)
                 # print
-                print("RECVD<: Entering SBEP mode to {} at {} baud".format(module, speed))
+                #print("RECVD<: Entering SBEP mode to {} at {} baud".format(module, speed))
+                return
+            # Channel state command
+            elif function == 0x0A:
+                # Monitor mode
+                if param1 == 0x01:
+                    if param2 == 0x01:
+                        self.printMsg("Chan State","Monitor ON")
+                        return
+                    else:
+                        self.printMsg("Chan State","Monitor OFF")
+                        return
+                # TX mode
+                elif param1 == 0x03:
+                    if param2 == 0x01:
+                        self.printMsg("Chan State","Transmit ON")
+                        return
+                    else:
+                        self.printMsg("Chan State","Transmit OFF")
+                        return
+            # Fallback for unknown message
+            else:
+                self.printMsg("Unknown","Unknown broadcast message function {}: params {}, {}".format(hex(function),hex(param1),hex(param2)))
                 return
 
         # front panel module
@@ -167,23 +193,23 @@ class XTL:
                 # lookup button
                 btn = self.getButton(param1)
                 if "knob" in btn:
-                    print("RECVD<: {} clicks: {}".format(btn,param2))
+                    self.printMsg("Btn/Knob","{} clicks: {}".format(btn,param2))
                     return
                 else:
                     if param2 == 0x01:
-                        print("RECVD<: {} pressed".format(btn))
+                        self.printMsg("Btn/Knob","{} pressed".format(btn))
                         return
                     else:
-                        print("RECVD<: {} release".format(btn))
+                        self.printMsg("Btn/Knob","{} released".format(btn))
                         return
             # backlighting / illumination
             elif function == 0x58:
                 # display BL
                 if param1 == 0x02:
-                    print("RECVD<: Display BL set to {}".format(param2))
+                    self.printMsg("Lighting","Display BL set to {}".format(param2))
                     return
                 elif param1 == 0x03:
-                    print("RECVD<: Button BL set to {}".format(param2))
+                    self.printMsg("Lighting","Button BL set to {}".format(param2))
                     return
 
         # radio module
@@ -191,22 +217,39 @@ class XTL:
             # audio device
             if function == 0x1D:
                 if param2 == 0x01:
-                    print("RECVD<: Audio unmuted")
+                    self.printMsg("Audio","Unmuted")
                     return
                 elif param2 == 0x00:
-                    print("RECVD<: Audio muted")
+                    self.printMsg("Audio","Muted")
+                    return
+            # channel state?
+            elif function == 0x1e:
+                # Channel idle
+                if param1 == 0x00 and param2 == 0x00:
+                    self.printMsg("Channel","Idle state")
+                    return
+                # Channel RX
+                if param2 == 0x03:
+                    self.printMsg("Channel","RX state")
+                    return
+                else:
+                    self.printMsg("Channel","Unknown state: {} {}".format(hex(param1),hex(param2)))
                     return
             # channel change cmd device?
-            if function == 0x1f:
-                print("RECVD<: Goto CH {}".format(param2))
+            elif function == 0x1f:
+                self.printMsg("Chan Change","Goto CH {}".format(param2))
                 return
             # channel change ack device?
-            if function == 0x60:
-                print("RECVD<: CH change {} ACK".format(param2))
+            elif function == 0x60:
+                self.printMsg("Chan Change","Goto CH {} OK".format(param2))
+                return
+            # fallback
+            else:
+                self.printMsg("Unknown","Unknown message for radio module (0x01): func {}, params {} {}".format(hex(function),hex(param1),hex(param2)))
                 return
 
         # default to just printing the message if we didn't do anything else
-        print("RECVD<: {}".format(hexlify(msg, ' ')))
+        self.printMsg("Unknown","Raw SB9600: {}".format(hexlify(msg, ' ')))
 
     def getButton(self, code):
         """Lookup button by opcode
@@ -224,6 +267,7 @@ class XTL:
             for key, value in self.button_map_o5.items():
                 if code == value:
                     return key
+            return "{} (Unknown)".format(hex(code))
         else:
             raise ValueError("Invalid head specified")
 
@@ -239,6 +283,7 @@ class XTL:
         for key, value in sbep_modules.items():
             if code == value:
                 return key
+        return "{} (Unknown)".format(hex(code))
 
     def getDisplaySubDev(self, code):
         """Lookup display subdevice by hex code
@@ -256,6 +301,7 @@ class XTL:
             for key, value in self.display_subdev_o5.items():
                 if code == value:
                     return key
+            return "{} (Unknown)".format(hex(code))
         else:
             raise ValueError("Invalid head specified")
 
@@ -275,6 +321,7 @@ class XTL:
             for key, value in self.display_icons_o5.items():
                 if code == value:
                     return key
+            return "{} (Unknown)".format(hex(code))
         else:
             raise ValueError("Invalid head specified")
 
@@ -388,3 +435,6 @@ class XTL:
         """Set the transmitter frequency"""
         ch = int((frequency*1E6 / 6250) - 60000)
         self.bus.sb9600_send(0x02, (ch >> 8) & 0xFF, ch & 0xFF, 0x3F)
+
+    def printMsg(self, source, msg):
+        print("{: >10} >>: {}".format(source, msg))
