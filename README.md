@@ -20,35 +20,25 @@ You'll need a python 3 installation and pyserial installed via pip.
 The ```listener.py``` script will print out any SB9600 or SBEP messages, and decode them if they're recognized. Simply change the COM port in the script and run it. Exit with Ctrl+C
 
 ```console
-RECVD<: knob_chan clicks: 255
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: Set text_channel to NOAA Cedar Rpd
-RECVD<: Goto CH 18
-RECVD<: CH change 18 ACK
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: Set text_softkeys to ^ZONE^NUIS^PWR ^SCAN^PROG
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: monitor icon on
-RECVD<: b'01 00 03 1e 3a'
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: None icon on
-RECVD<: Audio unmuted
-RECVD<: knob_chan clicks: 255
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: Set text_channel to 2m Calling
-RECVD<: b'01 00 00 1a 44'
-RECVD<: b'01 00 00 1e 81'
-RECVD<: Audio muted
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: None icon off
-RECVD<: Goto CH 17
-RECVD<: CH change 17 ACK
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: Set text_softkeys to ^ZONE^NUIS^PWR ^SCAN^CALL
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: low_power icon on
-RECVD<: Entering SBEP mode to PANEL at 9600 baud
-RECVD<: direct icon on
+  Btn/Knob >>: ptt pressed
+Chan State >>: Transmit ON
+   Unknown >>: Unknown message for radio module (0x01): func 0x1a, params 0x0 0x0
+   Channel >>: Idle state
+  Btn/Knob >>: hub released
+   Unknown >>: Unknown message for radio module (0x01): func 0x19, params 0x0 0x1
+ SBEP Icon >>: led_red (0x10) icon on
+   Unknown >>: Unknown message for radio module (0x01): func 0x3c, params 0xb 0x1
+   Unknown >>: Unknown message for radio module (0x01): func 0x3c, params 0xa 0x0
+     Audio >>: Unmuted
+Chan State >>: Monitor OFF
+     Audio >>: Muted
+  Btn/Knob >>: ptt released
+Chan State >>: Transmit OFF
+  Btn/Knob >>: hub pressed
+Chan State >>: Monitor ON
+   Unknown >>: Unknown message for radio module (0x01): func 0x19, params 0x0 0x0
+   Unknown >>: Unknown message for radio module (0x01): func 0x3c, params 0xb 0x0
+ SBEP Icon >>: led_red (0x10) icon off
 ```
 
 The other included py files are the support libraries for SB9600. They were originally pulled from https://paulbanks.org/projects/sb9600/. 
